@@ -11,9 +11,16 @@
 #                                                         /                    #
 # **************************************************************************** #
 NAME = libft.a
+
+# COMPILER
 CC = clang
 CFLAGS = -Wall -Wextra -Werror
-INC = libft.h
+
+# DIR
+
+SRCDIR = ./src/
+INCDIR = ./inc/
+OBJDIR = ./obj/
 
 SRC = ft_memset.c ft_bzero.c ft_memcpy.c ft_memmove.c ft_memchr.c \
 		ft_memcmp.c ft_strlen.c ft_strdup.c ft_strcpy.c ft_strncpy.c ft_strcat.c \
@@ -28,22 +35,24 @@ SRC = ft_memset.c ft_bzero.c ft_memcpy.c ft_memmove.c ft_memchr.c \
 		ft_memccpy.c ft_lstadd.c ft_lstdel.c ft_lstdelone.c ft_lstiter.c \
 		ft_lstmap.c ft_lstnew.c get_next_line.c \
 
-OBJ = $(SRC:.c=.o) 
+OBJ = $(addprefix $(OBJDIR), $(SRC:.c=.o))
 
 .PHONY: all re fclean clean
-
-all: $(NAME)
+all: $(OBJDIR) $(NAME)
 
 $(NAME): $(OBJ)
 	@ar rc $(NAME) $(OBJ)
 	@ranlib $(NAME)
-	@echo "\x1b[32m[LIBFT]all done.\x1b[37m"
+	@echo "[$(NAME)]: all done."
 
-%.o: %.c
-	@$(CC) $(CFLAGS) -I$(INC) -c $< -o $@
+$(OBJDIR)%.o: $(SRCDIR)%.c
+	@$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
+
+$(OBJDIR):
+	@mkdir -p $@
 
 clean:
-	rm -f *.o
+	rm -rf $(OBJDIR)
 
 fclean:	clean
 	rm -f $(NAME)
